@@ -17,6 +17,7 @@ steps:
     git config --global user.email "princeghoghari9@gmail.com"
     git config --global user.name "prince3453"
 
+    git checkout $(Build.SourceBranch)
     echo "Setting up remote..."
     git remote add github https://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@github.com/prince3453/AIducation.git
 
@@ -26,5 +27,5 @@ steps:
     echo "Committing and pushing changes..."
     git add .
     git commit -m "update from Azure devops Synchronization"
-    git push origin HEAD:main
+    git push origin $(Build.SourceBranch)
   displayName: 'Push to GitHub'
