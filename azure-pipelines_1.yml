@@ -1,0 +1,11 @@
+trigger:
+  branches:
+    include:
+    - '*'
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- script: echo Synchronizing with GitHub...
+  displayName: 'Sync with GitHub'
