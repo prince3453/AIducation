@@ -27,5 +27,6 @@ steps:
     echo "Committing and pushing changes..."
     git add .
     git commit -m "update from Azure devops Synchronization"
-    git push origin $(Build.SourceBranch)
+    git push github origin
+    git push origin HEAD
   displayName: 'Push to GitHub'
