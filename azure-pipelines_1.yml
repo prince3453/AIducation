@@ -25,7 +25,7 @@ steps:
     git pull github main
 
     echo "Committing and pushing changes..."
-    git add .
+    git remote add origin https://github.com/prince3453/AIducation.git
     git commit -m "update from Azure devops Synchronization"
     git push github origin
     git push origin HEAD
