@@ -22,5 +22,5 @@ steps:
 
     echo "Committing and pushing changes..."
     git commit -m "update from Azure devops Synchronization"
-    git push -u origin HEAD:main
+    git push https://prince3453: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@github.com/AIducation
   displayName: 'Push to GitHub'
