@@ -1,11 +1,19 @@
-# AIducation
-Facial Expression detection for the Education System
+# AIducation Project Delieverable 1
 
 ## File Ak_9.pdf:
 This File is the Report file for the Project Delieverable 1
 
 ## File Dataset_origin.pdf:
-A file or document detailing the provenance of each dataset/image:
+A file or document detailing the provenance of each dataset/image
+
+## Folder Dataset:
+All the belowed 4 folders have 10 images as a representation for all 4 emotions.
+- contains 4 folder inside with all 4 emotion:
+  - angry
+  - bored
+  - focused
+  - neutral
+
 
 ## Description of datapreprcessing.py
 ### Features
@@ -19,7 +27,7 @@ A file or document detailing the provenance of each dataset/image:
 4. Fetching Images:
    - Retrieves all .jpg or .png images from the specified directory.
 5. Resizing and Grayscale Conversion:
-   - Images are resized to a consistent size (64x64 pixels).
+   - Images are resized to a consistent size (48x48 pixels).
    - Converts the resized images to grayscale.
 6. Processing & Saving:
    - For each category, the script resizes, converts, and saves grayscale images to a newly created directory.
