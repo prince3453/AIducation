@@ -49,7 +49,7 @@ def ResizeAndGrayscale(images, ExpectedSize):
     return NewResizedImages
 
 # It is the Desired size for resizing
-ExpectedSize = (64, 64) 
+ExpectedSize = (48, 48) 
 TotalImageDisplay = 25
 Counter = {}
 
