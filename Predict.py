@@ -5,7 +5,7 @@ import Model_train as mt
 
 # Function to load the model
 def load_model(model_path):
-    model = mt.FacialExpressionCNN()  # Replace with your model class
+    model = mt.FacialExpressionCNN()
     model.load_state_dict(torch.load(model_path))
     model.eval()
     return model
@@ -17,13 +17,11 @@ def predict_image_class(image_path, model):
         transforms.Resize(48),
         transforms.CenterCrop(48),
         transforms.ToTensor(),
-        # If you used normalization during training, include it here as well
-        # transforms.Normalize(mean=[mean_values], std=[std_values])
     ])
 
     # Load and transform the image
     image = Image.open(image_path)
-    image = transform(image).unsqueeze(0)  # Add batch dimension
+    image = transform(image).unsqueeze(0)
 
     # Make the prediction
     with torch.no_grad():
@@ -31,8 +29,17 @@ def predict_image_class(image_path, model):
         _, predicted = torch.max(outputs, 1)
         return predicted.item()
 
-# Example usage
-model = load_model('path_to_your_model.pth')  # Replace with your model's file path
-image_path = 'path_to_your_test_image.jpg'    # Replace with your test image path
+model = load_model('facial_expression_model.pth')
+image_path = 'Dataset/412.jpg'
 predicted_class = predict_image_class(image_path, model)
 print(f'Predicted class: {predicted_class}')
+
+# Load class index mapping
+class_index_mapping = mt.get_class_index_mapping('Dataset')
+
+# Predict and interpret the class
+predicted_class_index = predict_image_class(image_path, model)
+predicted_class_name = [name for name, index in class_index_mapping.items() if index == predicted_class_index][0]
+
+print(f'Predicted class index: {predicted_class_index}')
+print(f'Predicted class name: {predicted_class_name}')

@@ -10,7 +10,7 @@ import torchvision.datasets as datasets
 class FacialExpressionCNN(nn.Module):
     def __init__(self):
         super(FacialExpressionCNN, self).__init__()
-        self.conv1 = nn.Conv2d(3, 16, 3, padding=1)  # Change from 1 to 3 for RGB images
+        self.conv1 = nn.Conv2d(1, 16, 3, padding=1)  # Change from 1 to 3 for RGB images
         self.conv2 = nn.Conv2d(16, 32, 3, padding=1)
         self.conv3 = nn.Conv2d(32, 64, 3, padding=1)
         self.pool = nn.MaxPool2d(2, 2)
@@ -29,14 +29,20 @@ class FacialExpressionCNN(nn.Module):
         x = self.fc3(x)
         return x
 
+
+def get_class_index_mapping(path):
+    dataset = datasets.ImageFolder(root=path)
+    return dataset.class_to_idx
+
 # Function to load the dataset
 def dataset_loader():
     data_transform = transforms.Compose([
+        transforms.Grayscale(num_output_channels=1),
         transforms.ToTensor()
     ])
 
     dataset = datasets.ImageFolder(root='Dataset', transform=data_transform)
-
+    class_index_mapping = get_class_index_mapping('Dataset')
     val_size = int(0.2 * len(dataset))
     train_size = len(dataset) - val_size
 
@@ -58,7 +64,7 @@ criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 
 # Training loop
-epochs = 10
+epochs = 100
 for epoch in range(epochs):
     running_loss = 0.0
     for images, labels in train_loader:
@@ -82,6 +88,9 @@ with torch.no_grad():
         correct += (predicted == labels).sum().item()
 
 print(f'Accuracy on the validation set: {100 * correct / total}%')
+# Assuming 'model' is your trained model instance
+torch.save(model.state_dict(), 'facial_expression_model.pth')
+
 
 
 
