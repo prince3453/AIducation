@@ -52,3 +52,13 @@ All the belowed 4 folders have 10 images as a representation for all 4 emotions.
 
 ## File Originality_form.pdf
 A form that has been signed by all the team memebers for the Originality of Work.
+
+
+for part-2
+
+First we have to set the path for the dataset in evolution.py file
+Then we also have to set the .pth file in evaluation.py
+We also have to import the train model python file too.
+Then run the program.
+
+If we have to want to check the application mode then we have to set the path for the dataset and also path for the image that we want to predict.
