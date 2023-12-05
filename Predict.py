@@ -1,45 +1,67 @@
-from PIL import Image
-import torchvision.transforms as transforms
 import torch
-import Model_train as mt
+import torch.nn as nn
+import torch.nn.functional as F
+from torchvision import transforms
+from PIL import Image
+
+
+class FacialExpressionCNN(nn.Module):
+    def __init__(self):
+        super(FacialExpressionCNN, self).__init__()
+        self.conv1 = nn.Conv2d(1, 16, 3, padding=1)
+        self.conv2 = nn.Conv2d(16, 32, 3, padding=1)
+        self.conv3 = nn.Conv2d(32, 64, 3, padding=1)
+        self.pool = nn.MaxPool2d(2, 2)
+        # Adjust the linear layer if the pooling layers change
+        self.fc1 = nn.Linear(64 * 6 * 6, 256)
+        self.fc2 = nn.Linear(256, 64)
+        self.fc3 = nn.Linear(64, 4)  # 4 classes
+
+    def forward(self, x):
+        x = self.pool(F.relu(self.conv1(x)))
+        x = self.pool(F.relu(self.conv2(x)))
+        x = self.pool(F.relu(self.conv3(x)))
+        x = x.view(-1, 64 * 6 * 6)  # Flatten layer
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        x = self.fc3(x)
+        return x
 
 # Function to load the model
 def load_model(model_path):
-    model = mt.FacialExpressionCNN()
-    model.load_state_dict(torch.load(model_path))
+    model = FacialExpressionCNN()
+    model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
     model.eval()
     return model
 
-# Function to predict the class of an image
-def predict_image_class(image_path, model):
-    # Define the same transforms as used during training
+# Function to preprocess the image
+def preprocess_image(image_path):
     transform = transforms.Compose([
-        transforms.Resize(48),
-        transforms.CenterCrop(48),
-        transforms.ToTensor(),
+        transforms.Grayscale(num_output_channels=1),
+        transforms.Resize((48, 48)),  # Adjust if your model expects a different size
+        transforms.ToTensor()
     ])
-
-    # Load and transform the image
     image = Image.open(image_path)
-    image = transform(image).unsqueeze(0)
+    image = transform(image)
+    image = image.unsqueeze(0)  # Add batch dimension
+    return image
 
-    # Make the prediction
+# Function to make a prediction
+def predict(image_path, model_path):
+    model = load_model(model_path)
+    image = preprocess_image(image_path)
     with torch.no_grad():
         outputs = model(image)
         _, predicted = torch.max(outputs, 1)
         return predicted.item()
 
-model = load_model('facial_expression_model.pth')
-image_path = 'Dataset/412.jpg'
-predicted_class = predict_image_class(image_path, model)
-print(f'Predicted class: {predicted_class}')
-
-# Load class index mapping
-class_index_mapping = mt.get_class_index_mapping('Dataset')
-
-# Predict and interpret the class
-predicted_class_index = predict_image_class(image_path, model)
-predicted_class_name = [name for name, index in class_index_mapping.items() if index == predicted_class_index][0]
-
-print(f'Predicted class index: {predicted_class_index}')
-print(f'Predicted class name: {predicted_class_name}')
+# Example usage
+path = 'Dataset/train/focused/22.jpg'
+predicted_class = predict(path, 'facial_expression_model.pth')
+thisdict = {
+  "0": "Angry",
+  "1": "Bored",
+  "2": "Focused",
+   "3" :"neutral"
+}
+print("Predicted class:", thisdict.get(str(predicted_class)))

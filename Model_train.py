@@ -10,7 +10,7 @@ import torchvision.datasets as datasets
 class FacialExpressionCNN(nn.Module):
     def __init__(self):
         super(FacialExpressionCNN, self).__init__()
-        self.conv1 = nn.Conv2d(1, 16, 3, padding=1)  # Change from 1 to 3 for RGB images
+        self.conv1 = nn.Conv2d(1, 16, 3, padding=1)
         self.conv2 = nn.Conv2d(16, 32, 3, padding=1)
         self.conv3 = nn.Conv2d(32, 64, 3, padding=1)
         self.pool = nn.MaxPool2d(2, 2)
@@ -41,8 +41,8 @@ def dataset_loader():
         transforms.ToTensor()
     ])
 
-    dataset = datasets.ImageFolder(root='Dataset', transform=data_transform)
-    class_index_mapping = get_class_index_mapping('Dataset')
+    dataset = datasets.ImageFolder(root='Dataset/train', transform=data_transform)
+    class_index_mapping = get_class_index_mapping('Dataset/train')
     val_size = int(0.2 * len(dataset))
     train_size = len(dataset) - val_size
 
@@ -64,7 +64,7 @@ criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 
 # Training loop
-epochs = 100
+epochs = 10
 for epoch in range(epochs):
     running_loss = 0.0
     for images, labels in train_loader:
