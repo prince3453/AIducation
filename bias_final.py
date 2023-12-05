@@ -130,6 +130,13 @@ def main():
         OverallGenderMetrics['Recall'],
         OverallGenderMetrics['F1-Score']
     )
+    print("\nOverall Averages for the Entire System:\n")
+    PrintMetrics(
+        overall_metrics['Accuracy'],
+        overall_metrics['Precision'],
+        overall_metrics['Recall'],
+        overall_metrics['F1-Score']
+    )
 
 
 if __name__ == "__main__":
